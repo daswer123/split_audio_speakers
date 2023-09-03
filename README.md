@@ -8,4 +8,4 @@ To use this script you need to get your Hugging Face access token that you can g
 # How to 
 1) Run `install.bat` and wait for installation
 2) Change the variables in the split_audio.bat file and run it
-3) Or open powershell/cmd and type `call venv/scripts/activate` and `python split.py audio.mp3 out_path hf_token`
+3) Or open powershell/cmd and type `.venv/scripts/activate` and `python split.py audio.mp3 out_path hf_token`
