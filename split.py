@@ -33,7 +33,7 @@ def process_speaker(data, speaker, pause_length):
 
 import os
 
-def run_whisper(audio_file, output_path, pause_length):
+def run_whisper(audio_file, output_path, pause_length,hf_token):
     device = "cuda" 
     batch_size = 16 
     compute_type = "float16"
@@ -49,7 +49,7 @@ def run_whisper(audio_file, output_path, pause_length):
 
     gc.collect(); torch.cuda.empty_cache(); del model_a
 
-    diarize_model = whisperx.DiarizationPipeline(use_auth_token="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", device=device)
+    diarize_model = whisperx.DiarizationPipeline(use_auth_token=hf_token, device=device)
     diarize_segments = diarize_model(audio)
     result = whisperx.assign_word_speakers(diarize_segments, result)
 
@@ -73,7 +73,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Обработка аудиофайла.')
     parser.add_argument('audio_file', type=str, help='Путь к аудиофайлу')
     parser.add_argument('output_path', type=str, help='Папка для вывода результатов')
+    parser.add_argument('hf_token', type=str, help='Ваш токен на HF')
     parser.add_argument('--pause', type=int, default=300, help='Длина паузы в миллисекундах')
     args = parser.parse_args()
 
-    run_whisper(args.audio_file, args.output_path, args.pause)
+    run_whisper(args.audio_file, args.output_path, args.pause, args.hf_token)
