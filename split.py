@@ -6,14 +6,21 @@ from functools import partial
 import whisperx
 import torch
 import gc 
+import os
 
 def process_speaker(data, speaker, pause_length):
-    audio = AudioSegment.from_mp3(data['audio_path'])
-
-    # Создание пустого аудио с паузой
+    # Получаем расширение файла
+    _, file_extension = os.path.splitext(data['audio_path'])
+    # Удаляем точку перед расширением для использования в экспорте
+    format_extension = file_extension.strip('.')
+    
+    # Загружаем аудио данные
+    audio = AudioSegment.from_file(data['audio_path'], format=format_extension)
+    
+    # Создаем тихий аудиосегмент для паузы
     pause = AudioSegment.silent(duration=pause_length)
 
-    # Создание пустого аудио для говорящего
+    # Создаем пустой аудиосегмент для говорящего
     speaker_audio = AudioSegment.empty()
 
     previous_speaker = None
@@ -28,10 +35,9 @@ def process_speaker(data, speaker, pause_length):
                 speaker_audio += pause + audio[start_time:end_time]
             previous_speaker = current_speaker
 
-    # Сохранение нового аудиофайла
     speaker_audio.export(f'{data["output_path"]}/{speaker}.mp3', format='mp3')
-
-import os
+    # Сохраняем новый аудиофайл в его исходном формате
+    # speaker_audio.export(f'{data["output_path"]}/{speaker}{file_extension}', format=format_extension)
 
 def run_whisper(audio_file, output_path, pause_length,hf_token):
     device = "cuda" 

@@ -12,4 +12,3 @@ To use this script you need to get your Hugging Face access token that you can g
 
 # Limitations
 1) It was found that **audio files longer than 2 hours could not be processed**
-2) You need a file in `mp3` format to work
